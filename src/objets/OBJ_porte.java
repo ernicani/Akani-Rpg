@@ -10,7 +10,7 @@ public class OBJ_porte extends SuperObjet {
 
         name = "Porte";
         try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/objets/porte.png")));
+            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entité/porte.png")));
         }
         catch (IOException e) {
             e.printStackTrace();

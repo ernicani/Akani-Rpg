@@ -1,7 +1,9 @@
 package entitée;
 
+import main.AssetSetter;
 import main.GamePanel;
 import main.KeyHandler;
+import objets.SuperObjet;
 
 import java.awt.*;
 
@@ -18,45 +20,59 @@ public class Player extends Entity {
     public final int screenX;
     public final int screenY;
     public int pClef = 0;
+    public int vie = 3;
+    public int porteConteur = 0;
+    public int index;
+    public boolean porteOuverte = false;
+    public SuperObjet tmp;
+    boolean mooving = false;
+    int pixelCounter = 0;
 
 
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
 
+
         screenX = gp.screenWidth / 2 - gp.tileSize / 2;
         screenY = gp.screenHeight / 2 - gp.tileSize / 2;
 
         hitbox = new Rectangle();
-        hitbox.x = 8;
-        hitbox.y = 16;
+        hitbox.x = 1;
+        hitbox.y = 1;
         defauthitboxX = hitbox.x;
         defauthitboxY = hitbox.y;
-        hitbox.width = 16;
-        hitbox.height = 20;
+        hitbox.width = 46;
+        hitbox.height = 46;
 
         setDefaultValues();
         getPlayerImage();
 
     }
+    public void dispTmpObjet(int i) {
+
+        index = i;
+        tmp = gp.obj[i];
+        porteOuverte = true;
+    }
 
     public void setDefaultValues() {
         worldX = gp.tileSize * 9;
         worldY = gp.tileSize * 8;
-        speed = 4;
+        speed = 3;
         direction = "bas";
     }
 
     public void getPlayerImage() {
         try {
-            bas1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Player/player_bas_1.png")));
-            bas2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Player/player_bas_2.png")));
-            haut1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Player/player_haut_1.png")));
-            haut2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Player/player_haut_2.png")));
-            gauche1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Player/player_gauche_1.png")));
-            gauche2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Player/player_gauche_2.png")));
-            droite1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Player/player_droite_1.png")));
-            droite2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Player/player_droite_2.png")));
+            bas1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entité/PB1.png")));
+            bas2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entité/PB2.png")));
+            haut1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entité/PH1.png")));
+            haut2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entité/PH2.png")));
+            gauche1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entité/PG1.png")));
+            gauche2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entité/PG2.png")));
+            droite1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entité/PD1.png")));
+            droite2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entité/PD2.png")));
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -65,28 +81,33 @@ public class Player extends Entity {
 
     public void update() {
 
-        if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
+        if (!mooving) {
+            if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
 
-            if (keyH.upPressed) {
-                direction = "haut";
-            } else if (keyH.downPressed) {
-                direction = "bas";
-            } else if (keyH.leftPressed) {
-                direction = "gauche";
+                if (keyH.upPressed) {
+                    direction = "haut";
+                } else if (keyH.downPressed) {
+                    direction = "bas";
+                } else if (keyH.leftPressed) {
+                    direction = "gauche";
+                }
+                if (keyH.rightPressed) {
+                    direction = "droite";
+                }
+                mooving = true;
+
+                //check les collisions
+                colisionOn = false;
+                gp.cCheck.checkSol(this);
+
+                //check les objets
+                int objetIndex = gp.cCheck.checkObjet(this, true);
+                pickUpOjets(objetIndex);
             }
-            if (keyH.rightPressed) {
-                direction = "droite";
-            }
+        }
+        if (mooving) {
 
-            //check les collisions
-            colisionOn = false;
-            gp.cCheck.checkSol(this);
-
-            //check les objets
-            int objetIndex = gp.cCheck.checkObjet(this, true);
-            pickUpOjets(objetIndex);
-
-            //Si la colision est fausse, on continue
+            //Si colision est false, on continue
             if (!colisionOn) {
 
                 switch (direction) {
@@ -114,26 +135,43 @@ public class Player extends Entity {
                 }
                 spriteCounter = 0;
             }
+
+            pixelCounter+=3;
+            if (pixelCounter == gp.tileSize) {
+                pixelCounter = 0;
+                mooving = false;
+            }
+
         }
+
 
     }
 
     public void pickUpOjets(int i) {
 
         if (i != 999) {
-            String ojet = gp.obj[i].name;
-            switch (ojet) {
+
+            String objet = gp.obj[i].name;
+            switch (objet) {
+
                 case "clef 1":
                     pClef++;
-                    gp.obj[i] = null;
-                    System.out.println(pClef);
+                    dispObjet(i);
+                    gp.gui.showMessage("Vous avez trouvé une clef !");
                     break;
+
                 case "Porte":
                     if (pClef != 0) {
-                        System.out.println(pClef);
-                        gp.obj[i] = null;
-                        System.out.println("La porte a ete ouverte");
+                        dispTmpObjet(i);
                     }
+                    else {
+                        gp.gui.showMessage("Vous n'avez pas de clef !");
+                    }
+                    break;
+                case "Bottes 1":
+                    speed += 1;
+                    dispObjet(i);
+                    break;
             }
         }
     }
@@ -173,6 +211,29 @@ public class Player extends Entity {
                 }
                 break;
         }
+
+        if (porteOuverte) {
+
+            gp.obj[index] = null;
+            porteConteur++;
+            if (porteConteur == 60) {
+                gp.obj[index] = tmp;
+                porteOuverte = false;
+                porteConteur = 0;
+            }
+        }
+
         g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
     }
+
+    public void dispObjet(int i) {
+
+        gp.obj[i] = null;
+    }
+
+
+
+
+
+
 }

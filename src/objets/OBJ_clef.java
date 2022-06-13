@@ -10,7 +10,7 @@ public class OBJ_clef extends SuperObjet {
 
         name = "clef 1";
         try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/objets/clef.png")));
+            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entité/clef.png")));
         }
         catch (IOException e) {
             e.printStackTrace();

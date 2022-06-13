@@ -1,5 +1,6 @@
 package main;
 
+import objets.OBJ_bottes;
 import objets.OBJ_clef;
 import objets.OBJ_porte;
 
@@ -22,5 +23,14 @@ public class AssetSetter {
         gp.obj[1].mondeX = 15 * gp.tileSize;
         gp.obj[1].mondeY = 8 * gp.tileSize;
 
+        gp.obj[2] = new OBJ_bottes();
+        gp.obj[2].mondeX = 22 * gp.tileSize;
+        gp.obj[2].mondeY = 6 * gp.tileSize;
+
+        gp.obj[3] = new OBJ_bottes();
+        gp.obj[3].mondeX = 30 * gp.tileSize;
+        gp.obj[3].mondeY = 7 * gp.tileSize;
     }
+
+
 }

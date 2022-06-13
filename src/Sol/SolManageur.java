@@ -20,7 +20,7 @@ public class SolManageur {
 
         this.gp = gp;
 
-        sol = new Sol[10];
+        sol = new Sol[200];
         mapSolNum = new int[gp.maxMondeCol][gp.maxMondeLig];
 
         getSolImage();

@@ -21,20 +21,21 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenHeight = tileSize * maxScreenLig; //hauteur de l'ecran en pixels
 
     //Parametres du monde
-    public final int maxMondeCol = 40; //nombre de colonnes dans le monde
+    public final int maxMondeCol = 42; //nombre de colonnes dans le monde
     public final int maxMondeLig = 17; //nombre de lignes dans le monde
     public final int mondeWidth = tileSize * maxMondeCol; //largeur du monde en pixels
     public final int mondeHeight = tileSize * maxMondeLig; //hauteur du monde en pixels
 
 
     //Parametres du jeu
-    int FPS = 60; //nombre de FPS
+    public int FPS = 60; //nombre de FPS
 
     SolManageur SolM = new SolManageur(this);
     KeyHandler keyH = new KeyHandler(); //gestionnaire des touches
     Thread gameThread; //thread du jeu
     public ColisionCheck cCheck = new ColisionCheck(this); //gestionnaire de collision
     public AssetSetter aSetter = new AssetSetter(this); //gestionnaire d'assets
+    public GUI gui = new GUI(this); //gestionnaire de l'interface
     public Player player = new Player(this, keyH); //joueur
     public SuperObjet obj [] = new SuperObjet[10]; //tableau de objets
 
@@ -79,23 +80,27 @@ public class GamePanel extends JPanel implements Runnable {
             lastTime = currentTime;
 
             if (delta >= 1) {
-                update();
+                try {
+                    update();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 repaint();
                 delta--;
                 drawCount++;
             }
 
-            //if (timer >= 1000000000) {
-            //    System.out.println("FPS: " + drawCount);
-            //    System.out.println("player : " + player.worldY + "/" + player.worldX);
-            //    timer = 0;
-            //    drawCount = 0;
-            //}
+            if (timer >= 1000000000) {
+                System.out.println("FPS: " + drawCount);
+                System.out.println("player : " + player.worldY + "/" + player.worldX);
+                timer = 0;
+                drawCount = 0;
+            }
 
         }
     }
 
-    public void update() {
+    public void update() throws InterruptedException {
 
         player.update();
 
@@ -121,6 +126,10 @@ public class GamePanel extends JPanel implements Runnable {
 
         //JOUEUR
         player.draw(g2);
+
+        //GUI
+        gui.draw(g2);
+
         g2.dispose();
 
     }
