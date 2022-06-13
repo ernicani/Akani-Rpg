@@ -11,6 +11,10 @@ public class SuperObjet {
     public String name;
     public boolean colision = false;
     public int mondeX, mondeY;
+    public Rectangle hitbox = new Rectangle(0,0,48,48);
+    public int defauthitboxX = 0;
+    public int defauthitboxY = 0;
+
 
     public void draw(Graphics2D g2, GamePanel gp) {
 

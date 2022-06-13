@@ -10,13 +10,14 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
-public class Player extends entity {
+public class Player extends Entity {
 
     GamePanel gp;
     KeyHandler keyH;
 
     public final int screenX;
     public final int screenY;
+    public int pClef = 0;
 
 
     public Player(GamePanel gp, KeyHandler keyH) {
@@ -29,6 +30,8 @@ public class Player extends entity {
         hitbox = new Rectangle();
         hitbox.x = 8;
         hitbox.y = 16;
+        defauthitboxX = hitbox.x;
+        defauthitboxY = hitbox.y;
         hitbox.width = 16;
         hitbox.height = 20;
 
@@ -39,7 +42,7 @@ public class Player extends entity {
 
     public void setDefaultValues() {
         worldX = gp.tileSize * 9;
-        worldY = gp.tileSize * 7;
+        worldY = gp.tileSize * 8;
         speed = 4;
         direction = "bas";
     }
@@ -66,20 +69,22 @@ public class Player extends entity {
 
             if (keyH.upPressed) {
                 direction = "haut";
-            }
-            else if (keyH.downPressed) {
+            } else if (keyH.downPressed) {
                 direction = "bas";
-            }
-            else if (keyH.leftPressed) {
+            } else if (keyH.leftPressed) {
                 direction = "gauche";
             }
             if (keyH.rightPressed) {
                 direction = "droite";
             }
 
-            // Collision check
+            //check les collisions
             colisionOn = false;
             gp.cCheck.checkSol(this);
+
+            //check les objets
+            int objetIndex = gp.cCheck.checkObjet(this, true);
+            pickUpOjets(objetIndex);
 
             //Si la colision est fausse, on continue
             if (!colisionOn) {
@@ -111,6 +116,26 @@ public class Player extends entity {
             }
         }
 
+    }
+
+    public void pickUpOjets(int i) {
+
+        if (i != 999) {
+            String ojet = gp.obj[i].name;
+            switch (ojet) {
+                case "clef 1":
+                    pClef++;
+                    gp.obj[i] = null;
+                    System.out.println(pClef);
+                    break;
+                case "Porte":
+                    if (pClef != 0) {
+                        System.out.println(pClef);
+                        gp.obj[i] = null;
+                        System.out.println("La porte a ete ouverte");
+                    }
+            }
+        }
     }
 
     public void draw(Graphics2D g2) {
@@ -150,20 +175,4 @@ public class Player extends entity {
         }
         g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
     }
-
-//    public void limite() {
-//
-//        //on ne peut pas aller en dehors de l'ecran
-//
-//        if (worldX > gp.screenWidth - gp.tileSize) {
-//            worldX = gp.screenWidth - gp.tileSize;
-//        } else if (worldX < 0) {
-//            worldX = 0;
-//        } else if (worldY < 0) {
-//            worldY = 0;
-//        } else if (worldY > gp.screenHeight - gp.tileSize) {
-//            worldY = gp.screenHeight - gp.tileSize;
-//        }
-//    }
-
 }

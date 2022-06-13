@@ -4,13 +4,13 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.util.Objects;
 
-public class OBJ_clef extends SuperObjet {
+public class OBJ_porte extends SuperObjet {
 
-    public OBJ_clef() {
+    public OBJ_porte() {
 
-        name = "clef 1";
+        name = "Porte";
         try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/objets/clef.png")));
+            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/objets/porte.png")));
         }
         catch (IOException e) {
             e.printStackTrace();

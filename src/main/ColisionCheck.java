@@ -1,6 +1,8 @@
 package main;
 
+import entitée.Entity;
 import entitée.Player;
+import java.awt.Rectangle;
 
 public class ColisionCheck {
 
@@ -73,5 +75,85 @@ public class ColisionCheck {
         }
 
 
+    }
+
+    public int checkObjet(Entity entity, boolean player) {
+
+        int index = 999;
+
+        for (int i = 0; i < gp.obj.length; i++) {
+
+            if (gp.obj[i] != null) {
+
+                entity.hitbox.x = entity.worldX + entity.hitbox.x;
+                entity.hitbox.y = entity.worldY + entity.hitbox.y;
+
+                gp.obj[i].hitbox.x = gp.obj[i].mondeX + gp.obj[i].hitbox.x;
+                gp.obj[i].hitbox.y = gp.obj[i].mondeY + gp.obj[i].hitbox.y;
+
+                switch (entity.direction) {
+                    case "haut":
+                        entity.hitbox.y -= entity.speed;
+                        if (entity.hitbox.intersects(gp.obj[i].hitbox)) {
+                            if (gp.obj[i].colision) {
+                                entity.colisionOn = true;
+                            }
+                            if (player) {
+                                index = i;
+                            }
+                            break;
+                        }
+
+
+                    case "bas":
+                        entity.hitbox.y += entity.speed;
+                        if (entity.hitbox.intersects(gp.obj[i].hitbox)) {
+                            if (gp.obj[i].colision) {
+                                entity.colisionOn = true;
+                            }
+                            if (player) {
+                                index = i;
+                            }
+                            break;
+                        }
+
+                    case "gauche":
+                        entity.hitbox.x -= entity.speed;
+                        if (entity.hitbox.intersects(gp.obj[i].hitbox)) {
+                            if (gp.obj[i].colision) {
+                                entity.colisionOn = true;
+                            }
+                            if (player) {
+                                index = i;
+                            }
+                            break;
+                        }
+
+                    case "droite":
+                        entity.hitbox.x += entity.speed;
+                        if (entity.hitbox.intersects(gp.obj[i].hitbox)) {
+                            if (gp.obj[i].colision) {
+                                entity.colisionOn = true;
+                            }
+                            if (player) {
+                                index = i;
+                            }
+                            break;
+                        }
+
+                }
+                entity.hitbox.x = entity.defauthitboxX;
+                entity.hitbox.y = entity.defauthitboxY;
+                gp.obj[i].hitbox.x = gp.obj[i].defauthitboxX;
+                gp.obj[i].hitbox.y = gp.obj[i].defauthitboxY;
+            }
+
+
         }
+
+        return index;
+
+    }
+
+
 }

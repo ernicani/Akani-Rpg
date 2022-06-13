@@ -22,7 +22,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     //Parametres du monde
     public final int maxMondeCol = 40; //nombre de colonnes dans le monde
-    public final int maxMondeLig = 16; //nombre de lignes dans le monde
+    public final int maxMondeLig = 17; //nombre de lignes dans le monde
     public final int mondeWidth = tileSize * maxMondeCol; //largeur du monde en pixels
     public final int mondeHeight = tileSize * maxMondeLig; //hauteur du monde en pixels
 
@@ -85,12 +85,12 @@ public class GamePanel extends JPanel implements Runnable {
                 drawCount++;
             }
 
-            if (timer >= 1000000000) {
-                System.out.println("FPS: " + drawCount);
-                System.out.println("player : " + player.worldY + "/" + player.worldX);
-                timer = 0;
-                drawCount = 0;
-            }
+            //if (timer >= 1000000000) {
+            //    System.out.println("FPS: " + drawCount);
+            //    System.out.println("player : " + player.worldY + "/" + player.worldX);
+            //    timer = 0;
+            //    drawCount = 0;
+            //}
 
         }
     }
