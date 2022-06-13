@@ -1,7 +1,9 @@
 package main;
 
-import Sol.SolManageur;
+
 import entitée.Player;
+import Sol.SolManageur;
+import objets.SuperObjet;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,13 +20,24 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenWidth = tileSize * maxScreenCol; //largeur de l'ecran en pixels
     public final int screenHeight = tileSize * maxScreenLig; //hauteur de l'ecran en pixels
 
+    //Parametres du monde
+    public final int maxMondeCol = 40; //nombre de colonnes dans le monde
+    public final int maxMondeLig = 16; //nombre de lignes dans le monde
+    public final int mondeWidth = tileSize * maxMondeCol; //largeur du monde en pixels
+    public final int mondeHeight = tileSize * maxMondeLig; //hauteur du monde en pixels
+
+
     //Parametres du jeu
     int FPS = 60; //nombre de FPS
 
     SolManageur SolM = new SolManageur(this);
     KeyHandler keyH = new KeyHandler(); //gestionnaire des touches
     Thread gameThread; //thread du jeu
-    Player player = new Player(this, keyH); //joueur
+    public ColisionCheck cCheck = new ColisionCheck(this); //gestionnaire de collision
+    public AssetSetter aSetter = new AssetSetter(this); //gestionnaire d'assets
+    public Player player = new Player(this, keyH); //joueur
+    public SuperObjet obj [] = new SuperObjet[10]; //tableau de objets
+
 
     public GamePanel() {
 
@@ -33,6 +46,10 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
+    }
+
+    public void setupGame() {
+        aSetter.setObjet();
     }
 
     public void start() {
@@ -70,7 +87,7 @@ public class GamePanel extends JPanel implements Runnable {
 
             if (timer >= 1000000000) {
                 System.out.println("FPS: " + drawCount);
-                System.out.println("player : " + player.y + "/" + player.x);
+                System.out.println("player : " + player.worldY + "/" + player.worldX);
                 timer = 0;
                 drawCount = 0;
             }
@@ -91,10 +108,19 @@ public class GamePanel extends JPanel implements Runnable {
         //Graphiques du jeu
         Graphics2D g2 = (Graphics2D) g;
 
-        SolM.draw(g2); //sol
+        //SOL
+        SolM.draw(g2);
 
-        player.draw(g2); //joueur
+        //OBJETS
+        for (int i = 0; i < obj.length; i++) {
+            if (obj[i] != null) {
+                obj[i].draw(g2,this);
+            }
 
+        }
+
+        //JOUEUR
+        player.draw(g2);
         g2.dispose();
 
     }

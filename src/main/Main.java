@@ -4,6 +4,8 @@ import javax.swing.*;
 
 public class Main {
 
+
+
     public static void main(String[] args) {
 
         JFrame fenetre = new JFrame();
@@ -19,6 +21,7 @@ public class Main {
         fenetre.setLocationRelativeTo(null);
         fenetre.setVisible(true);
 
+        gamePanel.setupGame();
         gamePanel.start();
     }
 }

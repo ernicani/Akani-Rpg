@@ -3,8 +3,9 @@ package entitée;
 import main.GamePanel;
 import main.KeyHandler;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
@@ -14,9 +15,22 @@ public class Player extends entity {
     GamePanel gp;
     KeyHandler keyH;
 
+    public final int screenX;
+    public final int screenY;
+
+
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
+
+        screenX = gp.screenWidth / 2 - gp.tileSize / 2;
+        screenY = gp.screenHeight / 2 - gp.tileSize / 2;
+
+        hitbox = new Rectangle();
+        hitbox.x = 8;
+        hitbox.y = 16;
+        hitbox.width = 16;
+        hitbox.height = 20;
 
         setDefaultValues();
         getPlayerImage();
@@ -24,8 +38,8 @@ public class Player extends entity {
     }
 
     public void setDefaultValues() {
-        x = 100;
-        y = 100;
+        worldX = gp.tileSize * 9;
+        worldY = gp.tileSize * 7;
         speed = 4;
         direction = "bas";
     }
@@ -52,20 +66,40 @@ public class Player extends entity {
 
             if (keyH.upPressed) {
                 direction = "haut";
-                y -= speed;
             }
-            if (keyH.downPressed) {
+            else if (keyH.downPressed) {
                 direction = "bas";
-                y += speed;
             }
-            if (keyH.leftPressed) {
+            else if (keyH.leftPressed) {
                 direction = "gauche";
-                x -= speed;
             }
             if (keyH.rightPressed) {
                 direction = "droite";
-                x += speed;
             }
+
+            // Collision check
+            colisionOn = false;
+            gp.cCheck.checkSol(this);
+
+            //Si la colision est fausse, on continue
+            if (!colisionOn) {
+
+                switch (direction) {
+                    case "haut":
+                        worldY -= speed;
+                        break;
+                    case "bas":
+                        worldY += speed;
+                        break;
+                    case "gauche":
+                        worldX -= speed;
+                        break;
+                    case "droite":
+                        worldX += speed;
+                        break;
+                }
+            }
+
             spriteCounter++;
             if (spriteCounter == 12) {
                 if (spriteNum == 1) {
@@ -77,7 +111,6 @@ public class Player extends entity {
             }
         }
 
-        limite();
     }
 
     public void draw(Graphics2D g2) {
@@ -115,22 +148,22 @@ public class Player extends entity {
                 }
                 break;
         }
-        g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
+        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
     }
 
-    public void limite() {
-
-        //on ne peut pas aller en dehors de l'ecran
-
-        if (x > gp.screenWidth - gp.tileSize) {
-            x = gp.screenWidth - gp.tileSize;
-        } else if (x < 0) {
-            x = 0;
-        } else if (y < 0) {
-            y = 0;
-        } else if (y > gp.screenHeight - gp.tileSize) {
-            y = gp.screenHeight - gp.tileSize;
-        }
-    }
+//    public void limite() {
+//
+//        //on ne peut pas aller en dehors de l'ecran
+//
+//        if (worldX > gp.screenWidth - gp.tileSize) {
+//            worldX = gp.screenWidth - gp.tileSize;
+//        } else if (worldX < 0) {
+//            worldX = 0;
+//        } else if (worldY < 0) {
+//            worldY = 0;
+//        } else if (worldY > gp.screenHeight - gp.tileSize) {
+//            worldY = gp.screenHeight - gp.tileSize;
+//        }
+//    }
 
 }
