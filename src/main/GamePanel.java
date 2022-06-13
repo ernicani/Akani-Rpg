@@ -1,5 +1,8 @@
 package main;
 
+import Sol.SolManageur;
+import entitée.Player;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,24 +12,19 @@ public class GamePanel extends JPanel implements Runnable {
     final int tailleOriginaleTiles = 16; //16x16 pixels
     final int scale = 3;
 
-    final int tileSize = tailleOriginaleTiles * scale; //taille de chaque tile en pixels
-    final int maxScreenCol = 16; //nombre de colonnes sur l'ecran
-    final int maxScreenLig = 12; //nombre de lignes sur l'ecran
-    final int screenWidth = tileSize * maxScreenCol; //largeur de l'ecran en pixels
-    final int screenHeight = tileSize * maxScreenLig; //hauteur de l'ecran en pixels
+    public final int tileSize = tailleOriginaleTiles * scale; //taille de chaque tile en pixels
+    public final int maxScreenCol = 16; //nombre de colonnes sur l'ecran
+    public final int maxScreenLig = 12; //nombre de lignes sur l'ecran
+    public final int screenWidth = tileSize * maxScreenCol; //largeur de l'ecran en pixels
+    public final int screenHeight = tileSize * maxScreenLig; //hauteur de l'ecran en pixels
 
     //Parametres du jeu
     int FPS = 60; //nombre de FPS
+
+    SolManageur SolM = new SolManageur(this);
     KeyHandler keyH = new KeyHandler(); //gestionnaire des touches
     Thread gameThread; //thread du jeu
-
-
-    //parametres de depart du joueur
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed = 5;
-    int playerJumpH = 10;
-
+    Player player = new Player(this, keyH); //joueur
 
     public GamePanel() {
 
@@ -72,7 +70,7 @@ public class GamePanel extends JPanel implements Runnable {
 
             if (timer >= 1000000000) {
                 System.out.println("FPS: " + drawCount);
-                System.out.println("player : " + playerY + "/" + playerX);
+                System.out.println("player : " + player.y + "/" + player.x);
                 timer = 0;
                 drawCount = 0;
             }
@@ -82,59 +80,23 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
 
-        if (keyH.upPressed) {
-            playerY -= playerSpeed;
-        }
-        if (keyH.leftPressed) {
-            playerX -= playerSpeed;
-        }
-        if (keyH.rightPressed) {
-            playerX += playerSpeed;
-        }
-        if (keyH.spacePressed) {
-            jump();
-        }
+        player.update();
 
-        limite();
     }
 
-    public void paintComponent(Graphics g){
+    public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
 
         //Graphiques du jeu
         Graphics2D g2 = (Graphics2D) g;
 
-        g2.setColor(Color.white);
+        SolM.draw(g2); //sol
 
-        g2.fillRect(playerX, playerY, tileSize,tileSize );
+        player.draw(g2); //joueur
 
         g2.dispose();
 
-    }
-
-    public void chute() {
-
-        if (playerY < screenHeight-tileSize) {
-            playerY += playerSpeed/1.5;             //pour eviter que le joueur ne sorte de l'ecran et chute
-        }
-    }
-
-    public void limite() {
-
-        //on ne peut pas aller en dehors de l'ecran
-
-        if (playerX > screenWidth-tileSize) {
-            playerX = screenWidth-tileSize;
-        } else if (playerX < 0) {
-            playerX = 0;
-        } else if (playerY < 0) {
-            playerY = 0;
-        }
-    }
-
-    public void jump() {
-        playerY -= playerJumpH;
     }
 
 }
