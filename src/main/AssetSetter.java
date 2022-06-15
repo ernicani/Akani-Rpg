@@ -1,8 +1,6 @@
 package main;
 
-import objets.OBJ_bottes;
-import objets.OBJ_clef;
-import objets.OBJ_porte;
+import entitée.Pnj01;
 
 public class AssetSetter {
 
@@ -15,21 +13,13 @@ public class AssetSetter {
 
     public void setObjet() {
 
-        gp.obj[0] = new OBJ_clef();
-        gp.obj[0].mondeX = 10 * gp.tileSize;
-        gp.obj[0].mondeY = 8 * gp.tileSize;
+    }
 
-        gp.obj[1] = new OBJ_porte();
-        gp.obj[1].mondeX = 15 * gp.tileSize;
-        gp.obj[1].mondeY = 8 * gp.tileSize;
+    public void setNPC() {
 
-        gp.obj[2] = new OBJ_bottes();
-        gp.obj[2].mondeX = 22 * gp.tileSize;
-        gp.obj[2].mondeY = 6 * gp.tileSize;
-
-        gp.obj[3] = new OBJ_bottes();
-        gp.obj[3].mondeX = 30 * gp.tileSize;
-        gp.obj[3].mondeY = 7 * gp.tileSize;
+        gp.pnj[0] = new Pnj01(gp);
+        gp.pnj[0].worldX = gp.tileSize * 15;
+        gp.pnj[0].worldY = gp.tileSize * 8;
     }
 
 

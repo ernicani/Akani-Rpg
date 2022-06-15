@@ -1,16 +1,13 @@
 package entitée;
 
-import main.AssetSetter;
 import main.GamePanel;
 import main.KeyHandler;
 import objets.SuperObjet;
 
 import java.awt.*;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Objects;
+
 
 public class Player extends Entity {
 
@@ -20,7 +17,6 @@ public class Player extends Entity {
     public final int screenX;
     public final int screenY;
     public int pClef = 0;
-    public int vie = 3;
     public int porteConteur = 0;
     public int index;
     public boolean porteOuverte = false;
@@ -30,6 +26,7 @@ public class Player extends Entity {
 
 
     public Player(GamePanel gp, KeyHandler keyH) {
+        super(gp);
         this.gp = gp;
         this.keyH = keyH;
 
@@ -64,19 +61,16 @@ public class Player extends Entity {
     }
 
     public void getPlayerImage() {
-        try {
-            bas1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entité/PB1.png")));
-            bas2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entité/PB2.png")));
-            haut1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entité/PH1.png")));
-            haut2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entité/PH2.png")));
-            gauche1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entité/PG1.png")));
-            gauche2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entité/PG2.png")));
-            droite1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entité/PD1.png")));
-            droite2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entité/PD2.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
 
-        }
+        bas1 = setup("/entité/PB1");
+        bas2 = setup("/entité/PB2");
+        haut1 = setup("/entité/PH1");
+        haut2 = setup("/entité/PH2");
+        gauche1 = setup("/entité/PG1");
+        gauche2 = setup("/entité/PG2");
+        droite1 = setup("/entité/PD1");
+        droite2 = setup("/entité/PD2");
+
     }
 
     public void update() {
@@ -99,6 +93,10 @@ public class Player extends Entity {
                 //check les collisions
                 colisionOn = false;
                 gp.cCheck.checkSol(this);
+
+                //check les pnj
+                int npcIndex = gp.cCheck.checkEntity(this, gp.pnj);
+                interactNPC(npcIndex);
 
                 //check les objets
                 int objetIndex = gp.cCheck.checkObjet(this, true);
@@ -169,12 +167,22 @@ public class Player extends Entity {
                     }
                     break;
                 case "Bottes 1":
-                    speed += 1;
+                    gp.gui.showMessage("Vous avez trouvé des bottes !");
                     dispObjet(i);
                     break;
             }
         }
     }
+
+
+    private void interactNPC(int i) {
+
+        if (i != 999) {
+            gp.gameState = 3;
+            gp.pnj[i].speek();
+        }
+    }
+
 
     public void draw(Graphics2D g2) {
 

@@ -13,7 +13,7 @@ public class ColisionCheck {
         this.gp = gp;
     }
 
-    public void checkSol(Player entity) {
+    public void checkSol(Entity entity) {
 
         int entityLeftWorldX = entity.worldX + entity.hitbox.x;
         int entityRightWorldX = entity.worldX + entity.hitbox.x + entity.hitbox.width;
@@ -153,6 +153,110 @@ public class ColisionCheck {
 
         return index;
 
+    }
+
+    public int checkEntity(Entity entity, Entity[] target ) {
+
+
+        int index = 999;
+
+        for (int i = 0; i < target.length; i++) {
+
+            if (target[i] != null) {
+
+                entity.hitbox.x = entity.worldX + entity.hitbox.x;
+                entity.hitbox.y = entity.worldY + entity.hitbox.y;
+
+                target[i].hitbox.x = target[i].worldX + target[i].hitbox.x;
+                target[i].hitbox.y = target[i].worldY + target[i].hitbox.y;
+
+                switch (entity.direction) {
+                    case "haut":
+                        entity.hitbox.y -= entity.speed;
+                        if (entity.hitbox.intersects(target[i].hitbox)) {
+                            entity.colisionOn = true;
+                            index = i;
+                        }
+                        break;
+
+
+                    case "bas":
+                        entity.hitbox.y += entity.speed;
+                        if (entity.hitbox.intersects(target[i].hitbox)) {
+                            entity.colisionOn = true;
+                            index = i;
+                        }
+                        break;
+
+                    case "gauche":
+                        entity.hitbox.x -= entity.speed;
+                        if (entity.hitbox.intersects(target[i].hitbox)) {
+                            entity.colisionOn = true;
+                            index = i;
+                        }
+                        break;
+
+                    case "droite":
+                        entity.hitbox.x += entity.speed;
+                        if (entity.hitbox.intersects(target[i].hitbox)) {
+                            entity.colisionOn = true;
+                            index = i;
+                        }
+                        break;
+
+                }
+                entity.hitbox.x = entity.defauthitboxX;
+                entity.hitbox.y = entity.defauthitboxY;
+                target[i].hitbox.x = target[i].defauthitboxX;
+                target[i].hitbox.y = target[i].defauthitboxY;
+                break;
+            }
+
+
+        }
+
+        return index;
+    }
+
+    public void checkPlayer(Entity entity) {
+
+        entity.hitbox.x = entity.worldX + entity.hitbox.x;
+        entity.hitbox.y = entity.worldY + entity.hitbox.y;
+
+        gp.player.hitbox.x = gp.player.worldX + gp.player.hitbox.x;
+        gp.player.hitbox.y = gp.player.worldY + gp.player.hitbox.y;
+
+        switch (entity.direction) {
+            case "haut":
+                entity.hitbox.y -= entity.speed;
+                if (entity.hitbox.intersects(gp.player.hitbox)) {
+                    entity.colisionOn = true;
+                }
+
+
+            case "bas":
+                entity.hitbox.y += entity.speed;
+                if (entity.hitbox.intersects(gp.player.hitbox)) {
+                    entity.colisionOn = true;
+                }
+
+            case "gauche":
+                entity.hitbox.x -= entity.speed;
+                if (entity.hitbox.intersects(gp.player.hitbox)) {
+                    entity.colisionOn = true;
+                }
+
+            case "droite":
+                entity.hitbox.x += entity.speed;
+                if (entity.hitbox.intersects(gp.player.hitbox)) {
+                    entity.colisionOn = true;
+                }
+
+        }
+        entity.hitbox.x = entity.defauthitboxX;
+        entity.hitbox.y = entity.defauthitboxY;
+        gp.player.hitbox.x = gp.player.defauthitboxX;
+        gp.player.hitbox.y = gp.player.defauthitboxY;
     }
 
 

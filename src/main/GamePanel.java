@@ -1,6 +1,7 @@
 package main;
 
 
+import entitée.Entity;
 import entitée.Player;
 import Sol.SolManageur;
 import objets.SuperObjet;
@@ -23,21 +24,29 @@ public class GamePanel extends JPanel implements Runnable {
     //Parametres du monde
     public final int maxMondeCol = 42; //nombre de colonnes dans le monde
     public final int maxMondeLig = 17; //nombre de lignes dans le monde
-    public final int mondeWidth = tileSize * maxMondeCol; //largeur du monde en pixels
-    public final int mondeHeight = tileSize * maxMondeLig; //hauteur du monde en pixels
 
 
     //Parametres du jeu
     public int FPS = 60; //nombre de FPS
 
     SolManageur SolM = new SolManageur(this);
-    KeyHandler keyH = new KeyHandler(); //gestionnaire des touches
+    public KeyHandler keyH = new KeyHandler(this); //gestionnaire des touches
     Thread gameThread; //thread du jeu
     public ColisionCheck cCheck = new ColisionCheck(this); //gestionnaire de collision
     public AssetSetter aSetter = new AssetSetter(this); //gestionnaire d'assets
     public GUI gui = new GUI(this); //gestionnaire de l'interface
+
+    //entité et objets
     public Player player = new Player(this, keyH); //joueur
-    public SuperObjet obj [] = new SuperObjet[10]; //tableau de objets
+    public SuperObjet obj[] = new SuperObjet[10]; //tableau de objets
+    public Entity[] pnj = new Entity[10]; //tableau de pnj
+
+    // Game State
+    public int gameState; //etat du jeu
+    public final int titleScreen = 0; //etat de jeu en menu
+    public final int playState = 1; //etat de jeu en jeu
+    public final int pauseState = 2; //etat de jeu en pause
+    public final int diablogueState = 3; //etat de jeu en diablogue
 
 
     public GamePanel() {
@@ -50,7 +59,12 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void setupGame() {
+
         aSetter.setObjet();
+        aSetter.setNPC();
+        //playMusic();
+        //stopMusic();
+        gameState = 1;
     }
 
     public void start() {
@@ -91,8 +105,8 @@ public class GamePanel extends JPanel implements Runnable {
             }
 
             if (timer >= 1000000000) {
-                System.out.println("FPS: " + drawCount);
-                System.out.println("player : " + player.worldY + "/" + player.worldX);
+                //System.out.println("FPS: " + drawCount);
+                //System.out.println("player : " + player.worldY + "/" + player.worldX);
                 timer = 0;
                 drawCount = 0;
             }
@@ -102,7 +116,23 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() throws InterruptedException {
 
-        player.update();
+        if (gameState == playState) {
+            //joueur
+            player.update();
+            //pnj
+            for (int i = 0; i < pnj.length; i++) {
+                if (pnj[i] != null) {
+                    pnj[i].update();
+                }
+            }
+        }
+        if (gameState == pauseState) {
+            //paused
+        }
+        if (gameState == diablogueState) {
+            //diablogue
+        }
+
 
     }
 
@@ -119,19 +149,26 @@ public class GamePanel extends JPanel implements Runnable {
         //OBJETS
         for (int i = 0; i < obj.length; i++) {
             if (obj[i] != null) {
-                obj[i].draw(g2,this);
+                obj[i].draw(g2, this);
             }
 
         }
 
-        //JOUEUR
-        player.draw(g2);
+        // PNJ
+        for (int i = 0; i < pnj.length; i++) {
+            if (pnj[i] != null) {
+                pnj[i].draw(g2);
+            }
 
-        //GUI
-        gui.draw(g2);
+            //JOUEUR
+            player.draw(g2);
 
-        g2.dispose();
+            //GUI
+            gui.draw(g2);
+
+            g2.dispose();
+
+        }
 
     }
-
 }

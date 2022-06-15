@@ -1,9 +1,11 @@
 package Sol;
 
 import main.GamePanel;
+import main.UtilityTools;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,42 +30,29 @@ public class SolManageur {
     }
 
     public void getSolImage() {
+
+            setup(0,"eau",true);
+            setup(1,"herbe",false);
+            setup(2,"herbe1",false);
+            setup(3,"herbe2",false);
+            setup(4,"spawn_milieux",false);
+            setup(5,"mur",true);
+            setup(6,"arbre",true);
+            setup(7,"sable",false);
+
+    }
+
+    public void setup(int index ,String imagePath,boolean colisions) {
+
+        UtilityTools ut = new UtilityTools();
+
         try {
-            sol[0] = new Sol();
-            sol[0].sol =ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Sol/eau.png")));
-            sol[0].colisions = true;
-
-            sol[1] = new Sol();
-            sol[1].sol = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Sol/herbe.png")));
-            sol[1].colisions = false;
-
-            sol[2] = new Sol();
-            sol[2].sol = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Sol/herbe1.png")));
-            sol[2].colisions = false;
-
-            sol[3] = new Sol();
-            sol[3].sol = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Sol/herbe2.png")));
-            sol[3].colisions = false;
-
-            sol[4] = new Sol();
-            sol[4].sol = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Sol/spawn_milieux.png")));
-            sol[4].colisions = false;
-
-            sol[5] = new Sol();
-            sol[5].sol = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Sol/mur.png")));
-            sol[5].colisions = true;
-
-            sol[6] = new Sol();
-            sol[6].sol = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Sol/arbre.png")));
-            sol[6].colisions = true;
-
-            sol[7] = new Sol();
-            sol[7].sol = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Sol/sable.png")));
-            sol[7].colisions = false;
-
-
-        } catch (IOException e) {
-
+            sol[index] = new Sol();
+            sol[index].sol = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Sol/"+ imagePath + ".png")));
+            sol[index].sol = ut.scaleImage(sol[index].sol,gp.tileSize,gp.tileSize);
+            sol[index].colisions = colisions;
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -119,7 +108,7 @@ public class SolManageur {
                 mondeY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
                 mondeY - gp.tileSize < gp.player.worldY + gp.player.screenY ) {
 
-                g2.drawImage(sol[mNum].sol, screenX, screenY, gp.tileSize, gp.tileSize, null);
+                g2.drawImage(sol[mNum].sol, screenX, screenY, null);
             }
 
             worldCol ++;
