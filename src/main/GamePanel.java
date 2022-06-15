@@ -43,7 +43,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     // Game State
     public int gameState; //etat du jeu
-    public final int titleScreen = 0; //etat de jeu en menu
+    public final int titleState = 0; //etat de jeu en menu
     public final int playState = 1; //etat de jeu en jeu
     public final int pauseState = 2; //etat de jeu en pause
     public final int diablogueState = 3; //etat de jeu en diablogue
@@ -62,9 +62,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         aSetter.setObjet();
         aSetter.setNPC();
-        //playMusic();
-        //stopMusic();
-        gameState = 1;
+        gameState = titleState;
     }
 
     public void start() {
@@ -139,9 +137,14 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
-
-        //Graphiques du jeu
         Graphics2D g2 = (Graphics2D) g;
+
+        //title screen
+        if (gameState == titleState) {
+            gui.draw(g2);
+        }
+
+        else {
 
         //SOL
         SolM.draw(g2);
@@ -168,6 +171,7 @@ public class GamePanel extends JPanel implements Runnable {
 
             g2.dispose();
 
+            }
         }
 
     }

@@ -16,6 +16,7 @@ public class GUI {
     public boolean messageOn = false;
     public String message;
     public String currentDialogue;
+    int commandNum = 0;
 
 
     public GUI(GamePanel gp) {
@@ -41,6 +42,10 @@ public class GUI {
         g2.setFont(arial_40);
         g2.setColor(Color.white);
 
+        //Title state
+        if (gp.gameState == gp.titleState) {
+            drawTitleScreen();
+        }
 
         //Play state
         if (gp.gameState == gp.playState) {
@@ -53,6 +58,60 @@ public class GUI {
         if (gp.gameState == gp.diablogueState) {
             drawDialogueScreen();
         }
+    }
+
+    public void drawTitleScreen () {
+
+        g2.setColor(new Color(70,120,80));
+        g2.fillRect(0, 0, gp.getWidth(), gp.getHeight());
+
+        // Nom du jeu
+        g2.setFont(arial_100);
+        String text = "AkaniRpg";
+        int x = getXforCenter(text);
+        int y = gp.tileSize * 3;
+
+        g2.setColor(Color.black);
+        g2.drawString(text, x+7, y+7);
+
+        g2.setColor(Color.white);
+        g2.drawString(text, x, y);
+
+        //Image
+        x = gp.screenWidth/2 - (gp.tileSize * 2)/2;
+        y += gp.tileSize*2;
+        g2.drawImage(gp.player.bas1, x, y, gp.tileSize*2, gp.tileSize*2, null);
+
+        //Menu
+        g2.setFont(arial_40);
+        text = "Nouvelle Partie";
+        x = getXforCenter(text);
+        y += gp.tileSize*3.5;
+        g2.setColor(Color.white);
+        g2.drawString(text, x, y);
+        if (commandNum == 0) {
+            g2.drawString(">", x-gp.tileSize/2, y);
+        }
+
+        text = "Charger Partie";
+        x = getXforCenter(text);
+        y += gp.tileSize;
+        g2.setColor(Color.white);
+        g2.drawString(text, x, y);
+        if (commandNum == 1) {
+            g2.drawString(">", x-gp.tileSize/2, y);
+        }
+
+        text = "Quitter";
+        x = getXforCenter(text);
+        y += gp.tileSize;
+        g2.setColor(Color.white);
+        g2.drawString(text, x, y);
+        if (commandNum == 2) {
+            g2.drawString(">", x-gp.tileSize/2, y);
+        }
+
+
     }
 
     public void drawPauseScreen() {
