@@ -78,6 +78,7 @@ public class Player extends Entity {
         if (!mooving) {
             if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
 
+
                 if (keyH.upPressed) {
                     direction = "haut";
                 } else if (keyH.downPressed) {
@@ -88,6 +89,7 @@ public class Player extends Entity {
                 if (keyH.rightPressed) {
                     direction = "droite";
                 }
+
                 mooving = true;
 
                 //check les collisions
@@ -101,7 +103,13 @@ public class Player extends Entity {
                 //check les objets
                 int objetIndex = gp.cCheck.checkObjet(this, true);
                 pickUpOjets(objetIndex);
+
             }
+            if (keyH.EnterPressed) {
+                int npcIndex = gp.cCheck.checkEntity(this, gp.pnj);
+                interactNPC(npcIndex);
+            }
+            keyH.EnterPressed = false;
         }
         if (mooving) {
 
@@ -125,7 +133,7 @@ public class Player extends Entity {
             }
 
             spriteCounter++;
-            if (spriteCounter == 12) {
+            if (spriteCounter == 8) {
                 if (spriteNum == 1) {
                     spriteNum = 2;
                 } else if (spriteNum == 2) {

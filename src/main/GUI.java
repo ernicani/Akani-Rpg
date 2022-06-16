@@ -147,7 +147,7 @@ public class GUI {
 
 
         g2.setFont(arial_20_plain);
-        g2.drawString("Appuyez sur Entrer pour continuer", x+gp.tileSize*4, y+gp.tileSize*4);
+        g2.drawString("Appuyez sur Entrer pour continuer", x+gp.tileSize*4, gp.tileSize*9);
 
     }
 
